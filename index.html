@@ -71,41 +71,20 @@
                 alert("Masukkan nama terlebih dahulu!");
                 return;
             }
-
-            // Mendapatkan tanggal hari ini untuk memastikan reset
-            const today = new Date().toISOString().split('T')[0];  // Format YYYY-MM-DD
-
-            // Cek apakah keberuntungan sudah dihitung hari ini
-            const lastCheckedDate = localStorage.getItem("lastCheckedDate");
-            if (lastCheckedDate === today) {
-                // Jika sudah dihitung hari ini, ambil hasil dari localStorage
-                const luckPercent = parseInt(localStorage.getItem("luckPercent"));
-                displayResult(luckPercent);
-                return;
-            }
-
-            // Fungsi untuk menghasilkan nilai keberuntungan berdasarkan nama secara lebih acak
-            function generateLuckPercent(name) {
+            
+            // Fungsi untuk menghasilkan nilai hash berdasarkan nama
+            function generateHash(name) {
                 let hash = 0;
                 for (let i = 0; i < name.length; i++) {
-                    hash = Math.imul(31, hash) + name.charCodeAt(i) | 0;
+                    hash = (hash << 5) - hash + name.charCodeAt(i);
                 }
-                const dateHash = new Date().getDay();  // Mengambil hari dalam seminggu untuk variasi
-                const luckPercent = Math.abs((hash + dateHash) % 100);  // Hasil antara 0 hingga 99
-                return luckPercent;
+                return hash;
             }
 
-            const luckPercent = generateLuckPercent(name);
+            // Mendapatkan hash dari nama
+            const hashValue = generateHash(name);
+            const luckPercent = Math.abs(hashValue) % 100;  // Menghasilkan angka antara 0 hingga 99
 
-            // Menyimpan hasil keberuntungan dan tanggal yang dihitung
-            localStorage.setItem("luckPercent", luckPercent);
-            localStorage.setItem("lastCheckedDate", today);
-
-            // Menampilkan hasil keberuntungan
-            displayResult(luckPercent);
-        }
-
-        function displayResult(luckPercent) {
             // Menampilkan hasil keberuntungan
             let resultText = `Keberuntungan kamu: ${luckPercent}%`;
             if (luckPercent > 80) {
@@ -120,10 +99,10 @@
 
             // Daftar game dan gambar
             const games = [
-                { name: "PG SOFT", image: "https://i.ibb.co/TqYDW31/MAHJONG2.png", minLuck: 90 },
-                { name: "PRAGMATIC", image: "https://i.ibb.co/74R3S8Z/KAKEK-ZEUS.png", minLuck: 80 },
+                { name: "PG SOFT", image: "https://i.ibb.co/TqYDW31/MAHJONG2.png", minLuck: 70 },
+                { name: "PRAGMATIC", image: "https://i.ibb.co/74R3S8Z/KAKEK-ZEUS.png", minLuck: 50 },
                 { name: "CQ9", image: "https://i.ibb.co/GtGMK1Z/CQ9.png", minLuck: 60 },
-                { name: "AFB GAMING", image: "https://i.ibb.co/31tZykV/AFB-GAMING.png", minLuck: 0 }
+                { name: "AFB GAMING", image: "https://i.ibb.co/31tZykV/AFB-GAMING.png", minLuck: 30 }
             ];
 
             // Menampilkan game berdasarkan persentase keberuntungan
