@@ -74,7 +74,7 @@
 
             // Mendapatkan tanggal hari ini untuk memastikan reset
             const today = new Date().toISOString().split('T')[0];  // Format YYYY-MM-DD
-            
+
             // Cek apakah keberuntungan sudah dihitung hari ini
             const lastCheckedDate = localStorage.getItem("lastCheckedDate");
             if (lastCheckedDate === today) {
@@ -86,13 +86,13 @@
 
             // Fungsi untuk menghasilkan nilai keberuntungan berdasarkan nama secara lebih acak
             function generateLuckPercent(name) {
-                // Menggunakan nilai unicode dari nama dan tanggal untuk memastikan hasil yang berbeda setiap hari
+                // Menggunakan karakter-karakter nama untuk menghasilkan hash yang lebih acak
                 let hash = 0;
                 for (let i = 0; i < name.length; i++) {
-                    hash = (hash << 5) - hash + name.charCodeAt(i);
+                    hash = Math.imul(31, hash) + name.charCodeAt(i) | 0;
                 }
-                // Menggunakan tanggal juga untuk memastikan hasilnya reset setiap hari
-                const dateHash = new Date().getDate();
+                // Menggunakan tanggal hari ini untuk menambahkan variasi pada hasil
+                const dateHash = new Date().getDay();  // Mengambil hari dalam seminggu untuk sedikit variasi
                 const luckPercent = Math.abs((hash + dateHash) % 100);  // Hasil antara 0 hingga 99
                 return luckPercent;
             }
