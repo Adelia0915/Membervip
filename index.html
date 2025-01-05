@@ -72,6 +72,18 @@
                 return;
             }
             
+            // Mendapatkan tanggal hari ini untuk memastikan reset
+            const today = new Date().toISOString().split('T')[0];  // Format YYYY-MM-DD
+            
+            // Cek apakah keberuntungan sudah dihitung hari ini
+            const lastCheckedDate = localStorage.getItem("lastCheckedDate");
+            if (lastCheckedDate === today) {
+                // Jika sudah dihitung hari ini, ambil hasil dari localStorage
+                const luckPercent = parseInt(localStorage.getItem("luckPercent"));
+                displayResult(luckPercent);
+                return;
+            }
+
             // Fungsi untuk menghasilkan nilai hash berdasarkan nama
             function generateHash(name) {
                 let hash = 0;
@@ -85,6 +97,15 @@
             const hashValue = generateHash(name);
             const luckPercent = Math.abs(hashValue) % 100;  // Menghasilkan angka antara 0 hingga 99
 
+            // Menyimpan hasil keberuntungan dan tanggal yang dihitung
+            localStorage.setItem("luckPercent", luckPercent);
+            localStorage.setItem("lastCheckedDate", today);
+
+            // Menampilkan hasil keberuntungan
+            displayResult(luckPercent);
+        }
+
+        function displayResult(luckPercent) {
             // Menampilkan hasil keberuntungan
             let resultText = `Keberuntungan kamu: ${luckPercent}%`;
             if (luckPercent > 80) {
