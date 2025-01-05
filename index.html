@@ -53,6 +53,14 @@
             max-width: 300px;
             margin-top: 15px;
         }
+        .game-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .game-buttons button {
+            width: 45%;
+        }
     </style>
 </head>
 <body>
@@ -111,10 +119,14 @@
             // Pilih game secara acak dari game yang sesuai
             if (filteredGames.length > 0) {
                 const randomGame = filteredGames[Math.floor(Math.random() * filteredGames.length)];
-                document.getElementById("gameContainer").innerHTML = `
+                document.getElementById("gameContainer").innerHTML = ` 
                     <p>Game yang cocok untuk kamu: ${randomGame.name}</p>
                     <p>Keberuntungan kamu: ${luckPercent}%</p>
                     <img src="${randomGame.image}" alt="${randomGame.name}">
+                    <div class="game-buttons">
+                        <button onclick="window.location.href='https://link.deposito.com'">Deposit Sekarang</button>
+                        <button onclick="window.location.href='https://link.mainkan.com'">Mainkan Sekarang</button>
+                    </div>
                 `;
             } else {
                 document.getElementById("gameContainer").innerHTML = "<p>Hari ini tidak ada game yang cocok, coba lagi nanti!</p>";
