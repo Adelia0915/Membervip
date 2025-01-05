@@ -1,6 +1,8 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8;
+    background-image: url('https://i.ibb.co/hRy7j7p/b6b93f37-3c59-405c-b3a9-44bc61428eb9.webp'); /* Ganti URL_GAMBAR dengan link gambar yang diinginkan */
+    background-size: cover; /* Agar gambar menutupi seluruh halaman */
+    background-position: center center; /* Menempatkan gambar di tengah */
     color: #333;
     margin: 0;
     padding: 0;
