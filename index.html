@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             height: 100vh;
-            background-image: url('https://i.ibb.co/hRy7j7p/b6b93f37-3c59-405c-b3a9-44bc61428eb9.webp'); /* Ganti dengan URL gambar yang diinginkan */
+            background-image: url('https://i.ibb.co/hRy7j7p/b6b93f37-3c59-405c-b3a9-44bc61428eb9.webp');
             background-size: cover;
             background-position: center center;
             display: flex;
@@ -19,15 +19,8 @@
             align-items: center;
             flex-direction: column;
         }
-        h1 {
+        h1, p, .result, .game {
             color: #fff;
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #fff;
-            font-size: 18px;
-            margin-bottom: 30px;
         }
         input, button {
             padding: 10px;
@@ -51,23 +44,31 @@
             margin-top: 30px;
             font-size: 24px;
             font-weight: bold;
-            color: #fff;
+        }
+        .game {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .game img {
+            max-width: 300px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <h1>Seberapa Beruntung Kamu Hari Ini?</h1>
-    <p>Masukkan User ID kamu untuk mengecek keberuntungan!</p>
-    <input type="text" id="nameInput" placeholder="Masukkan User_ID kamu" />
-    <button onclick="checkLuck()">Cek Game Gacor</button>
+    <p>Masukkan nama kamu untuk mengecek keberuntungan!</p>
+    <input type="text" id="nameInput" placeholder="Masukkan nama lengkap Anda" />
+    <button onclick="checkLuck()">Cek Keberuntungan</button>
 
     <div id="result" class="result"></div>
+    <div id="gameContainer" class="game"></div>
 
     <script>
         function checkLuck() {
             const name = document.getElementById("nameInput").value;
             if (name === "") {
-                alert("Masukkan Userid terlebih dahulu!");
+                alert("Masukkan nama terlebih dahulu!");
                 return;
             }
             
@@ -95,6 +96,29 @@
             }
 
             document.getElementById("result").textContent = resultText;
+
+            // Daftar game dan gambar
+            const games = [
+                { name: "PG SOFT", image: "https://i.ibb.co/TqYDW31/MAHJONG2.png", minLuck: 70 },
+                { name: "PRAGMATIC", image: "https://i.ibb.co/74R3S8Z/KAKEK-ZEUS.png", minLuck: 50 },
+                { name: "CQ9", image: "https://i.ibb.co/GtGMK1Z/CQ9.png", minLuck: 60 },
+                { name: "AFB GAMING", image: "https://i.ibb.co/31tZykV/AFB-GAMING.png", minLuck: 30 }
+            ];
+
+            // Menampilkan game berdasarkan persentase keberuntungan
+            const filteredGames = games.filter(game => luckPercent >= game.minLuck);
+
+            // Pilih game secara acak dari game yang sesuai
+            if (filteredGames.length > 0) {
+                const randomGame = filteredGames[Math.floor(Math.random() * filteredGames.length)];
+                document.getElementById("gameContainer").innerHTML = `
+                    <p>Game yang cocok untuk kamu: ${randomGame.name}</p>
+                    <p>Keberuntungan kamu: ${luckPercent}%</p>
+                    <img src="${randomGame.image}" alt="${randomGame.name}">
+                `;
+            } else {
+                document.getElementById("gameContainer").innerHTML = "<p>Hari ini tidak ada game yang cocok, coba lagi nanti!</p>";
+            }
         }
     </script>
 </body>
