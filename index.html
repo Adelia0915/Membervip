@@ -18,105 +18,55 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            animation: backgroundAnimation 10s infinite alternate;
         }
-
-        h1 {
+        h1, p, .result, .game {
             color: #fff;
-            font-size: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            animation: fadeIn 2s ease-in-out, bounce 1s infinite;
         }
-
-        h1 span {
-            color: #FFD700; /* Gold color for "beruntung" */
-        }
-
-        p {
-            color: #fff;
-            font-size: 1.2rem;
-            margin-top: 10px;
-            animation: fadeIn 2s ease-in-out;
-        }
-
         input, button {
             padding: 10px;
             font-size: 16px;
             margin-top: 20px;
             border-radius: 5px;
         }
-
         input {
             border: 2px solid #4CAF50;
         }
-
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #45a049;
         }
-
         .result {
             margin-top: 30px;
             font-size: 24px;
             font-weight: bold;
+            color: #fff; /* Mengubah warna teks menjadi putih */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Menambahkan efek bayangan */
         }
-
         .game {
             margin-top: 20px;
             font-size: 18px;
         }
-
+        .game img {
+            max-width: 300px;
+            margin-top: 15px;
+        }
         .game-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
         }
-
         .game-buttons button {
             width: 45%;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes bounce {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes backgroundAnimation {
-            0% {
-                background-position: 0% 0%;
-            }
-            100% {
-                background-position: 100% 100%;
-            }
-        }
-
     </style>
 </head>
 <body>
-    <h1><span>Seberapa Beruntung</span> Kamu Hari Ini?</h1>
+    <h1>Seberapa Beruntung Kamu Hari Ini?</h1>
     <p>Masukkan User ID kamu untuk mengecek keberuntungan!</p>
     <input type="text" id="nameInput" placeholder="Masukkan User ID Anda" />
     <button onclick="checkLuck()">Cek Keberuntungan</button>
@@ -178,7 +128,7 @@
 
             // Tampilkan game yang cocok
             if (selectedGame) {
-                document.getElementById("gameContainer").innerHTML = `
+                document.getElementById("gameContainer").innerHTML = ` 
                     <p>Game yang cocok untuk kamu: ${selectedGame.game.name}</p>
                     <img src="${selectedGame.game.image}" alt="${selectedGame.game.name}">
                     <div class="game-buttons">
