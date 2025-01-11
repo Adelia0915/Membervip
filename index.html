@@ -44,8 +44,6 @@
             margin-top: 30px;
             font-size: 24px;
             font-weight: bold;
-            color: #fff; /* Mengubah warna teks menjadi putih */
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Menambahkan efek bayangan */
         }
         .game {
             margin-top: 20px;
@@ -81,6 +79,28 @@
                 alert("Masukkan nama terlebih dahulu!");
                 return;
             }
+
+            const maxUsage = 2;
+            const cooldown = 60 * 60 * 1000; // 1 jam dalam milidetik
+            let usageCount = parseInt(localStorage.getItem(name + "_usageCount")) || 0;
+            let lastUsed = parseInt(localStorage.getItem(name + "_lastUsed")) || 0;
+            let currentTime = new Date().getTime();
+
+            // Cek apakah sudah lebih dari 1 jam
+            if (currentTime - lastUsed > cooldown) {
+                usageCount = 0; // Reset penggunaan jika sudah lebih dari 1 jam
+            }
+
+            if (usageCount >= maxUsage) {
+                let timeRemaining = Math.ceil((cooldown - (currentTime - lastUsed)) / (1000 * 60));
+                alert(`ID ini sudah digunakan lebih dari 2 kali. Coba lagi dalam ${timeRemaining} menit.`);
+                return;
+            }
+
+            // Update penggunaan ID
+            usageCount++;
+            localStorage.setItem(name + "_usageCount", usageCount);
+            localStorage.setItem(name + "_lastUsed", currentTime);
 
             // Fungsi untuk menghasilkan nilai hash berdasarkan nama
             function generateHash(name) {
@@ -128,11 +148,11 @@
 
             // Tampilkan game yang cocok
             if (selectedGame) {
-                document.getElementById("gameContainer").innerHTML = ` 
+                document.getElementById("gameContainer").innerHTML = `
                     <p>Game yang cocok untuk kamu: ${selectedGame.game.name}</p>
                     <img src="${selectedGame.game.image}" alt="${selectedGame.game.name}">
                     <div class="game-buttons">
-                        <button onclick="window.location.href='https://direct.lc.chat/10963232/'">Pola Gacor</button>
+                        <button onclick="window.location.href='https://direct.lc.chat/10963232/'">Deposit Sekarang</button>
                         <button onclick="window.location.href='https://t.ly/Antiblockezykasino'">Mainkan Sekarang</button>
                     </div>
                 `;
