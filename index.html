@@ -18,53 +18,105 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            animation: backgroundAnimation 10s infinite alternate;
         }
-        h1, p, .result, .game {
+
+        h1 {
             color: #fff;
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: fadeIn 2s ease-in-out, bounce 1s infinite;
         }
+
+        h1 span {
+            color: #FFD700; /* Gold color for "beruntung" */
+        }
+
+        p {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
         input, button {
             padding: 10px;
             font-size: 16px;
             margin-top: 20px;
             border-radius: 5px;
         }
+
         input {
             border: 2px solid #4CAF50;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         .result {
             margin-top: 30px;
             font-size: 24px;
             font-weight: bold;
         }
+
         .game {
             margin-top: 20px;
             font-size: 18px;
         }
-        .game img {
-            max-width: 300px;
-            margin-top: 15px;
-        }
+
         .game-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
         }
+
         .game-buttons button {
             width: 45%;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <h1>Seberapa Beruntung Kamu Hari Ini?</h1>
+    <h1><span>Seberapa Beruntung</span> Kamu Hari Ini?</h1>
     <p>Masukkan User ID kamu untuk mengecek keberuntungan!</p>
     <input type="text" id="nameInput" placeholder="Masukkan User ID Anda" />
     <button onclick="checkLuck()">Cek Keberuntungan</button>
@@ -79,28 +131,6 @@
                 alert("Masukkan nama terlebih dahulu!");
                 return;
             }
-
-            const maxUsage = 2;
-            const cooldown = 60 * 60 * 1000; // 1 jam dalam milidetik
-            let usageCount = parseInt(localStorage.getItem(name + "_usageCount")) || 0;
-            let lastUsed = parseInt(localStorage.getItem(name + "_lastUsed")) || 0;
-            let currentTime = new Date().getTime();
-
-            // Cek apakah sudah lebih dari 1 jam
-            if (currentTime - lastUsed > cooldown) {
-                usageCount = 0; // Reset penggunaan jika sudah lebih dari 1 jam
-            }
-
-            if (usageCount >= maxUsage) {
-                let timeRemaining = Math.ceil((cooldown - (currentTime - lastUsed)) / (1000 * 60));
-                alert(`ID ini sudah digunakan lebih dari 2 kali. Coba lagi dalam ${timeRemaining} menit.`);
-                return;
-            }
-
-            // Update penggunaan ID
-            usageCount++;
-            localStorage.setItem(name + "_usageCount", usageCount);
-            localStorage.setItem(name + "_lastUsed", currentTime);
 
             // Fungsi untuk menghasilkan nilai hash berdasarkan nama
             function generateHash(name) {
@@ -152,7 +182,7 @@
                     <p>Game yang cocok untuk kamu: ${selectedGame.game.name}</p>
                     <img src="${selectedGame.game.image}" alt="${selectedGame.game.name}">
                     <div class="game-buttons">
-                        <button onclick="window.location.href='https://direct.lc.chat/10963232/'">Minta Pola gacor</button>
+                        <button onclick="window.location.href='https://direct.lc.chat/10963232/'">Deposit Sekarang</button>
                         <button onclick="window.location.href='https://t.ly/Antiblockezykasino'">Mainkan Sekarang</button>
                     </div>
                 `;
