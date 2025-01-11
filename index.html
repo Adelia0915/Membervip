@@ -73,34 +73,34 @@
     <div id="gameContainer" class="game"></div>
 
     <script>
-        const attempts = {};
-
         function checkLuck() {
             const name = document.getElementById("nameInput").value;
-            const now = Date.now();
-            const hourInMs = 60 * 60 * 1000;
-
             if (name === "") {
                 alert("Masukkan nama terlebih dahulu!");
                 return;
             }
 
-            // Cek jika user sudah mencoba
-            if (!attempts[name]) {
-                attempts[name] = { count: 0, lastAttempt: 0 };
+            const maxUsage = 2;
+            const cooldown = 60 * 60 * 1000; // 1 jam dalam milidetik
+            let usageCount = parseInt(localStorage.getItem(name + "_usageCount")) || 0;
+            let lastUsed = parseInt(localStorage.getItem(name + "_lastUsed")) || 0;
+            let currentTime = new Date().getTime();
+
+            // Cek apakah sudah lebih dari 1 jam
+            if (currentTime - lastUsed > cooldown) {
+                usageCount = 0; // Reset penggunaan jika sudah lebih dari 1 jam
             }
 
-            const userAttempts = attempts[name];
-
-            if (userAttempts.count >= 2 && now - userAttempts.lastAttempt < hourInMs) {
-                alert("Anda sudah mencoba 2 kali. Silakan coba lagi 1 jam kemudian.");
+            if (usageCount >= maxUsage) {
+                let timeRemaining = Math.ceil((cooldown - (currentTime - lastUsed)) / (1000 * 60));
+                alert(`ID ini sudah digunakan lebih dari 2 kali. Coba lagi dalam ${timeRemaining} menit.`);
                 return;
-            } else if (now - userAttempts.lastAttempt >= hourInMs) {
-                userAttempts.count = 0; // Reset setelah 1 jam
             }
 
-            userAttempts.count++;
-            userAttempts.lastAttempt = now;
+            // Update penggunaan ID
+            usageCount++;
+            localStorage.setItem(name + "_usageCount", usageCount);
+            localStorage.setItem(name + "_lastUsed", currentTime);
 
             // Fungsi untuk menghasilkan nilai hash berdasarkan nama
             function generateHash(name) {
@@ -113,7 +113,7 @@
 
             // Mendapatkan hash dari nama
             const hashValue = generateHash(name);
-            const luckPercent = Math.abs(hashValue) % 100;  // Menghasilkan angka antara 0 hingga 99
+            const luckPercent = Math.abs(hashValue) % 100; // Menghasilkan angka antara 0 hingga 99
 
             // Menampilkan hasil keberuntungan
             let resultText = `Keberuntungan kamu: ${luckPercent}%`;
@@ -122,36 +122,42 @@
             } else if (luckPercent > 50) {
                 resultText += " - Keberuntungan sedang berpihak padamu!";
             } else {
-                resultText += " - Mungkin hari ini bukan hari terbaikmu, coba game dibawah ini !!!";
+                resultText += " - Mungkin hari ini bukan hari terbaikmu, coba game di bawah ini!";
             }
 
             document.getElementById("result").textContent = resultText;
 
-            // Daftar game dan gambar
-            const games = [
-                { name: "PG SOFT", image: "https://i.ibb.co/TqYDW31/MAHJONG2.png", minLuck: 70 },
-                { name: "PRAGMATIC", image: "https://i.ibb.co/74R3S8Z/KAKEK-ZEUS.png", minLuck: 50 },
-                { name: "CQ9", image: "https://i.ibb.co/GtGMK1Z/CQ9.png", minLuck: 60 },
-                { name: "AFB GAMING", image: "https://i.ibb.co/31tZykV/AFB-GAMING.png", minLuck: 30 }
+            // Rentang keberuntungan dan daftar game
+            const luckRanges = [
+                { range: [0, 10], game: { name: "AFB GAMING", image: "https://i.ibb.co/zmX2ptf/AFB-MANEKI.png" } },
+                { range: [11, 20], game: { name: "AFB GAMING", image: "https://i.ibb.co/N2Dm60p/CRAZY-BOMB.png" } },
+                { range: [21, 30], game: { name: "PRAGMATIC", image: "https://i.ibb.co/DkTkth3/Starlight-princess.png" } },
+                { range: [31, 40], game: { name: "PG SOFT", image: "https://i.ibb.co/K7pgpCq/PG-The-Great-Escape.png" } },
+                { range: [41, 50], game: { name: "CQ9", image: "https://i.ibb.co/rGBPQgq/CQ9-GUGUGU3.png" } },
+                { range: [51, 60], game: { name: "PRAGMATIC", image: "https://i.ibb.co/xD1Nmjw/pragmat.png" } },
+                { range: [61, 70], game: { name: "PG SOFT", image: "https://i.ibb.co/x6bCHGX/WIld-bandito.png" } },
+                { range: [71, 80], game: { name: "CQ9", image: "https://i.ibb.co/GtGMK1Z/CQ9.png" } },
+                { range: [81, 90], game: { name: "PRAGMATIC", image: "https://i.ibb.co/74R3S8Z/KAKEK-ZEUS.png" } },
+                { range: [91, 100], game: { name: "PG SOFT", image: "https://i.ibb.co/TqYDW31/MAHJONG2.png" } }
             ];
 
-            // Menampilkan game berdasarkan persentase keberuntungan
-            const filteredGames = games.filter(game => luckPercent >= game.minLuck);
+            // Cari game berdasarkan persentase keberuntungan
+            const selectedGame = luckRanges.find(range => 
+                luckPercent >= range.range[0] && luckPercent <= range.range[1]
+            );
 
-            // Pilih game secara acak dari game yang sesuai
-            if (filteredGames.length > 0) {
-                const randomGame = filteredGames[Math.floor(Math.random() * filteredGames.length)];
-                document.getElementById("gameContainer").innerHTML = ` 
-                    <p>Game yang cocok untuk kamu: ${randomGame.name}</p>
-                    <p>Keberuntungan kamu: ${luckPercent}%</p>
-                    <img src="${randomGame.image}" alt="${randomGame.name}">
+            // Tampilkan game yang cocok
+            if (selectedGame) {
+                document.getElementById("gameContainer").innerHTML = `
+                    <p>Game yang cocok untuk kamu: ${selectedGame.game.name}</p>
+                    <img src="${selectedGame.game.image}" alt="${selectedGame.game.name}">
                     <div class="game-buttons">
                         <button onclick="window.location.href='https://direct.lc.chat/10963232/'">Deposit Sekarang</button>
                         <button onclick="window.location.href='https://t.ly/Antiblockezykasino'">Mainkan Sekarang</button>
                     </div>
                 `;
             } else {
-                document.getElementById("gameContainer").innerHTML = "<p>Hari ini tidak ada game yang cocok, silahkan minta pola ke livechat!!</p>";
+                document.getElementById("gameContainer").innerHTML = "<p>Hari ini tidak ada game yang cocok, silahkan minta pola ke livechat!</p>";
             }
         }
     </script>
