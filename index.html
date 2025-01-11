@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cek Keberuntungan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Menambahkan font retro -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Press Start 2P', cursive; /* Menggunakan font retro */
+            font-family: 'Press Start 2P', cursive;
             text-align: center;
             margin: 0;
             padding: 0;
@@ -82,6 +82,27 @@
                 alert("Masukkan nama terlebih dahulu!");
                 return;
             }
+
+            // Cek jumlah percobaan
+            let attempts = JSON.parse(localStorage.getItem(name)) || { count: 0, lastAttempt: null };
+            const currentTime = new Date().getTime();
+
+            if (attempts.count >= 2 && currentTime - attempts.lastAttempt < 600000) { // 10 menit = 600000 ms
+                alert("ID yang sama telah dimasukkan lebih dari dua kali dalam 10 menit. Coba lagi nanti!");
+                return;
+            }
+
+            // Update jumlah percobaan
+            if (currentTime - attempts.lastAttempt >= 600000) {
+                // Reset percobaan setelah 10 menit
+                attempts.count = 0;
+            }
+
+            attempts.count += 1;
+            attempts.lastAttempt = currentTime;
+
+            // Simpan ke localStorage
+            localStorage.setItem(name, JSON.stringify(attempts));
 
             // Fungsi untuk menghasilkan nilai hash berdasarkan nama
             function generateHash(name) {
